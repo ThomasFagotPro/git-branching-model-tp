@@ -83,6 +83,7 @@
             let historyList = document.getElementById('history-list');
             let calculation = '';
 
+            // Gestion des clics sur les boutons
             for (let i = 0; i < btn.length; i++) {
                 btn[i].addEventListener("click", function(){
                     if (this.innerHTML === "=") {
@@ -103,6 +104,30 @@
                     }
                 });
             }
+
+            // Gestion des frappes au clavier
+            document.addEventListener("keydown", function(event) {
+                const key = event.key;
+                const validKeys = "0123456789/*-+.=C'Backspace'";
+                if (validKeys.includes(key)) {
+                    if (key === "=") {
+                    let result = eval(value.innerHTML);
+                    calculation += '=' + result.toFixed(2);
+                    value.innerHTML = result.toFixed(2);
+                    addToHistory(calculation);
+                    calculation = '';
+                    } else if (key === "C") {
+                        value.innerHTML = "";
+                        calculation = '';
+                    } else if (key === "Backspace") {
+                        value.innerHTML = value.innerHTML.slice(0, -1);
+                        calculation = calculation.slice(0, -1);
+                    } else {
+                        value.innerHTML += key;
+                        calculation += key;
+                    }
+                }
+            });
 
             function addToHistory(calculation) {
                 let li = document.createElement('li');
