@@ -62,6 +62,10 @@
                 btn[i].addEventListener("click", function(){
                     if (this.innerHTML === "=") {
                         value.innerHTML = eval(value.innerHTML);
+                }  else if (this.innerHTML === "Clear") {
+                    value.innerHTML = "";
+                } else if (this.id === "backspace") {
+                    value.innerHTML = value.innerHTML.slice(0, -1);
                 } else {
                     value.innerHTML += this.innerHTML;
                     calculation += this.innerHTML;
