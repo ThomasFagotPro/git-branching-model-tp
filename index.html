@@ -70,6 +70,7 @@
                 <div class="history">
                     <h3>History</h3>
                     <ul id="history-list"></ul>
+                    <button onclick="downloadCSV()">Télécharger CSV</button>
                 </div>
 
             </section>
@@ -82,6 +83,7 @@
             let value = document.getElementById('value');
             let historyList = document.getElementById('history-list');
             let calculation = '';
+            let historyData = [];
 
             // Gestion des clics sur les boutons
             for (let i = 0; i < btn.length; i++) {
@@ -142,6 +144,16 @@
 
             function hidePopup() {
                 document.getElementById("popup").style.display = "none";
+            }
+
+            function downloadCSV() {
+                const csvContent = "data:text/csv;charset=utf-8," + historyData.join("\n");
+                const encodedURI = encodeURI(csvContent);
+                const link = document.createElement("a");
+                link.setAttribute("href", encodedURI);
+                link.setAttribute("download", "history.csv");
+                document.body.appendChild(link);
+                link.click();
             }
 
         </script>
