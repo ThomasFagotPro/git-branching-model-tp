@@ -109,3 +109,23 @@ section, section header, .history{
     -5px -5px 10px #fff,
     inset 5px 5px 10px rgba(0,0,0,0.1);
 }
+/* Pop up */
+
+.popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 500px;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    z-index: 9999;
+}
+
+.close {
+position: absolute;
+top: 10px;
+right: 10px;
+cursor: pointer;
+}

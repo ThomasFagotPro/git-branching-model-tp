@@ -23,6 +23,24 @@
                 <header>
                     <h2>Calculatrice en ligne</h2>
                     <p>Une application en ligne développée par Thomas FAGOT</p>
+                    <button onclick="showPopup()">Manuel d'utilisation</button>
+                    <div id="popup" class="popup" style="display: none;">
+                        <div class="close" onclick="hidePopup()">&times;</div>
+                        <h2>Manuel d'utilisation</h2>
+                        <p>Cette application est une calculette qui permet de faire des calculs simples : addition, soustraction, division, multiplication</p><br>
+                        <p>Pour pouvoir l'utiliser, vous devez :</p>
+                        <ul>
+                            <li>Taper sur les touches pour écrire votre premier nombre</li>
+                            <li>Taper sur l'opérateur voulu</li>
+                            <li>Taper sur les touches pour écrire votre deuxième nombre</li>
+                            <li>Taper sur la touche égale pour afficher le résultat</li>
+                        </ul>
+                        <br>
+                        <p>Vous pouvez également utiliser les touches du clavier.</p><br>
+                        <p>Si vous vous êtes trompé d'une touche, vous pouvez appuyer sur la touche C. Cela effacera la dernière touche que vous avez tapée.</p><br>
+                        <p>Si vous voulez effacer tout le calcul ou le résultat, vous pouvez appuyer sur la touche clear</p><br>
+                        <p>Pour voir l'historique des calculs, vous pouvez faire défiler vers le bas et vous verrez tous les calculs effectués précédemment.</p><br>
+                    </div>
                 </header>
 
                 <div class="calculator">
@@ -49,10 +67,96 @@
                     </div>
                 </div>
 
+                <div class="history">
+                    <h3>History</h3>
+                    <ul id="history-list"></ul>
+                    <button onclick="downloadCSV()">Télécharger CSV</button>
+                </div>
+
             </section>
 
         </main>
 
+        <script>
+            let buttons = document.querySelector('.buttons');
+            let btn = document.querySelectorAll('span');
+            let value = document.getElementById('value');
+            let historyList = document.getElementById('history-list');
+            let calculation = '';
+            let historyData = [];
+
+            // Gestion des clics sur les boutons
+            for (let i = 0; i < btn.length; i++) {
+                btn[i].addEventListener("click", function(){
+                    if (this.innerHTML === "=") {
+                        let result = eval(value.innerHTML);
+                        value.innerHTML = result;
+                        calculation += '=' + result
+                        addToHistory(calculation);
+                        calculation = '';
+                    }  else if (this.innerHTML === "Clear") {
+                        value.innerHTML = "";
+                        calculation = '';
+                    } else if (this.id === "backspace") {
+                        value.innerHTML = value.innerHTML.slice(0, -1);
+                        calculation = calculation.slice(0, -1);
+                    } else {
+                        value.innerHTML += this.innerHTML;
+                        calculation += this.innerHTML;
+                    }
+                });
+            }
+
+            // Gestion des frappes au clavier
+            document.addEventListener("keydown", function(event) {
+                const key = event.key;
+                const validKeys = "0123456789/*-+.=C'Backspace'";
+                if (validKeys.includes(key)) {
+                    if (key === "=") {
+                    let result = eval(value.innerHTML);
+                    calculation += '=' + result.toFixed(2);
+                    value.innerHTML = result.toFixed(2);
+                    addToHistory(calculation);
+                    calculation = '';
+                    } else if (key === "C") {
+                        value.innerHTML = "";
+                        calculation = '';
+                    } else if (key === "Backspace") {
+                        value.innerHTML = value.innerHTML.slice(0, -1);
+                        calculation = calculation.slice(0, -1);
+                    } else {
+                        value.innerHTML += key;
+                        calculation += key;
+                    }
+                }
+            });
+
+            function addToHistory(calculation) {
+                let li = document.createElement('li');
+                li.textContent = calculation;
+                historyList.appendChild(li);
+                historyData.push(calculation);
+            }
+
+            function showPopup() {
+                document.getElementById("popup").style.display = "block";
+            }
+
+            function hidePopup() {
+                document.getElementById("popup").style.display = "none";
+            }
+
+            function downloadCSV() {
+                const csvContent = "data:text/csv;charset=utf-8," + historyData.join("\n");
+                const encodedURI = encodeURI(csvContent);
+                const link = document.createElement("a");
+                link.setAttribute("href", encodedURI);
+                link.setAttribute("download", "history.csv");
+                document.body.appendChild(link);
+                link.click();
+            }
+
+        </script>
     </body>
 
 </html>
